@@ -37,7 +37,8 @@ public class BotListener extends Thread {
 		this.botAPI = botAPI;
 
 		// Maps of all API to Handler Class name
-		this.botMap.put("POC_Alert_Bot", "com.smistrydev.poc.update.BasicUpdateHandler");
+		this.botMap.put("POC_Basic_Bot", "com.smistrydev.poc.update.BasicUpdateHandler");
+		this.botMap.put("POC_Alert_Bot", "com.smistrydev.poc.update.ElasticUpdateHandler");
 
 		try {
 			@SuppressWarnings("unchecked")

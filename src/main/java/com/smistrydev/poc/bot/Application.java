@@ -19,10 +19,14 @@ public class Application {
 		L.trace("start");
 
 		BotManger botManger = new BotManger();
-		BotAPI alertBot = botManger.getBotAPI("212025635:AAGN4N3gQXq0Qv2iZvmEl5QO-2CquKFjiF8");
 
-		BotListener botListener = new BotListener(alertBot);
-		botListener.startRunning();
+		BotAPI elasticBot = botManger.getBotAPI("212025635:AAGN4N3gQXq0Qv2iZvmEl5QO-2CquKFjiF8");
+		BotListener elasticBotListener = new BotListener(elasticBot);
+		elasticBotListener.startRunning();
+
+		BotAPI basicBot = botManger.getBotAPI("224558317:AAFfXEVtIdPd0oTCQ2aaEjtHvOfZLjbUmDg");
+		BotListener basicBotListener = new BotListener(basicBot);
+		basicBotListener.startRunning();
 
 	}
 
