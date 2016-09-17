@@ -1,3 +1,9 @@
+curl -g --url 'https://7f4c706ed9c38df74c9ef356a67b7c86.ap-southeast-2.aws.found.io:9243/_cluster/health' -u admin:Hello#12
+
+curl -G 'http://7f4c706ed9c38df74c9ef356a67b7c86.ap-southeast-2.aws.found.io:9200/app/sense_cluster/health'
+
+
+
 curl -g 'http://localhost:8080/botintegrator/deleteall'
 
 curl -g 'http://localhost:8080/botintegrator/restart'
