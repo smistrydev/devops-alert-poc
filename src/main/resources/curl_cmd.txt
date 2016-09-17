@@ -1,0 +1,32 @@
+curl -g 'http://localhost:8080/botintegrator/deleteall'
+
+curl -g 'http://localhost:8080/botintegrator/restart'
+
+curl -g 'http://localhost:8080/botintegrator/stop'
+curl -g 'http://localhost:8080/botintegrator/start'
+curl -g 'http://localhost:8080/botintegrator/count'
+
+echo Test Bot
+curl -d 'apikey=147365592:AAHguW7VMCtaK3104yr3fSHnnh74LtYPlxQ&registrationEmail=sanjay.mistry@standardbank.co.za&clazz=com.mcdc.telegram.bot.BasicBotUpdateHandler&description=My description of Sanjay Test bot&title=sanjaytestbot' --url 'http://localhost:8080/botintegrator/botRegistration'
+
+echo Dashboard Bot 
+curl -d 'apikey=190309164:AAEYs7_WRY8RJfNbgeP8bmBzx1W-2oJSO_k&registrationEmail=sanjay.mistry@standardbank.co.za&clazz=com.mcdc.telegram.bot.DashboardBotUpdateHandler&description=My description of Sanjay Test bot&title=dashboard' --url 'http://localhost:8080/botintegrator/botRegistration'
+
+curl -g 'http://localhost:8080/botintegrator/resendBotRegistrationToken?apikey=147365592:AAHguW7VMCtaK3104yr3fSHnnh74LtYPlxQ'
+
+curl -d 'apikey=147365592:AAHguW7VMCtaK3104yr3fSHnnh74LtYPlxQ' 'http://localhost:8080/botintegrator/resetBotRegistrationToken'
+
+// Register MCDC Alert Bot
+curl -d 'apikey=262386765:AAGHt9UlFv9IyHMaGq6KnASyfQB7xldfOcM&registrationEmail=sanjay.mistry@standardbank.co.za' 'http://localhost:8080/botintegrator/registerAlertBot'
+
+
+// Send Alert example:
+bot_token=2436146c13c34685b2a83ae450f53d58
+alert_chat_token=5206f546e40d4db0a530cbaa21769177
+curl -d 'botToken=2436146c13c34685b2a83ae450f53d58&groupChatToken=5206f546e40d4db0a530cbaa21769177&messageText=Hello This is a friendly Alert' 'http://localhost:8080/botintegrator/sendAlertMessage'
+
+
+bot_token=2436146c13c34685b2a83ae450f53d58
+alert_chat_token=2553df5ee7c94fcf88894d564921c01d
+curl -d 'botToken=42b7f9aea5084704ab03de21beebe602&groupChatToken=6f33af2885744f8b981e76e746cfb41f&messageText=Test123' 'http://localhost:8080/botintegrator/sendAlertMessage'
+
