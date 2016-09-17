@@ -11,7 +11,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<spring-data-releasetrain.version>Gosling-RELEASE</spring-data-releasetrain.version>
-		<start-class>com.mcdc.telegram.main.Application</start-class>
+		<start-class>com.smistrydev.poc.bot.Application</start-class>
 		<skipTests>true</skipTests>
 	</properties>
 
