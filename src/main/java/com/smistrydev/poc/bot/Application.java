@@ -17,19 +17,13 @@ public class Application {
 	public static void main(String[] args) {
 		context = SpringApplication.run(Application.class, args);
 		L.trace("start");
-		
-		System.out.println("-----------------START------------------");
-		
+
 		BotManger botManger = new BotManger();
 		BotAPI alertBot = botManger.getBotAPI("212025635:AAGN4N3gQXq0Qv2iZvmEl5QO-2CquKFjiF8");
-		
+
 		BotListener botListener = new BotListener(alertBot);
 		botListener.startRunning();
 
-		System.out.println("-----------------RUNNING----------------");
-
-		L.trace("stop");
 	}
-
 
 }

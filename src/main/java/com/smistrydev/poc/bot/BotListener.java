@@ -3,10 +3,13 @@
  */
 package com.smistrydev.poc.bot;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.smistrydev.poc.update.BotUpdateHandler;
 
 import de.raysha.lib.telegram.bot.api.BotAPI;
 import de.raysha.lib.telegram.bot.api.exception.BotException;
@@ -26,9 +29,24 @@ public class BotListener extends Thread {
 	private Integer offset = 0;
 	private boolean running = true;
 	private String status = "initialized";
+	private BotUpdateHandler handler;
+
+	private HashMap<String, String> botMap = new HashMap<>();
 
 	public BotListener(BotAPI botAPI) {
 		this.botAPI = botAPI;
+
+		// Maps of all API to Handler Class name
+		this.botMap.put("POC_Alert_Bot", "com.smistrydev.poc.update.BasicUpdateHandler");
+
+		try {
+			@SuppressWarnings("unchecked")
+			Class<BotUpdateHandler> botHandlerClass = (Class<BotUpdateHandler>) Class.forName(this.botMap.get(this.botAPI.getMe().getUsername()));
+			this.handler = botHandlerClass.newInstance();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+
 	}
 
 	public boolean isRunning() {
@@ -51,7 +69,6 @@ public class BotListener extends Thread {
 	@Override
 	public void run() {
 		this.status = "running";
-		System.out.println("Running....");
 		try {
 			while (running) {
 				try {
@@ -59,7 +76,7 @@ public class BotListener extends Thread {
 					if (updates != null && !updates.isEmpty()) {
 						for (Update update : updates) {
 							offset = update.getUpdate_id() + 1;
-							L.debug(update.toString());
+							this.handler.execute(botAPI, update);
 						}
 					}
 				} catch (BotException e) {
