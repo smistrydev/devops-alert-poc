@@ -51,6 +51,7 @@ public class BotListener extends Thread {
 	@Override
 	public void run() {
 		this.status = "running";
+		System.out.println("Running....");
 		try {
 			while (running) {
 				try {
