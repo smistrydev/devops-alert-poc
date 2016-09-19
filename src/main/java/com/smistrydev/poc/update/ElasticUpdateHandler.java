@@ -4,11 +4,19 @@
 package com.smistrydev.poc.update;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.gson.JsonObject;
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.JsonNode;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.request.GetRequest;
 
 import de.raysha.lib.telegram.bot.api.BotAPI;
 import de.raysha.lib.telegram.bot.api.exception.BotException;
@@ -19,9 +27,6 @@ import io.searchbox.client.JestClientFactory;
 import io.searchbox.client.JestResult;
 import io.searchbox.client.config.HttpClientConfig;
 import io.searchbox.cluster.Health;
-import io.searchbox.core.Cat;
-import io.searchbox.core.CatResult;
-import io.searchbox.core.Get;
 
 /**
  * @author sanjaymistry
@@ -29,25 +34,32 @@ import io.searchbox.core.Get;
  */
 public class ElasticUpdateHandler implements BotUpdateHandler {
 
+	private static final String ES_URL = "http://5f658568e210b218e632034026dd0b29.ap-southeast-2.aws.found.io:9200/";
+	private static final String ES_USER = "admin";
+	private static final String ES_PASS = "Hello#123";
+
 	private static final Logger L = LoggerFactory.getLogger(ElasticUpdateHandler.class);
 	private JestClientFactory factory;
 
 	public ElasticUpdateHandler() {
 		factory = new JestClientFactory();
-		factory.setHttpClientConfig(new HttpClientConfig.Builder("http://5f658568e210b218e632034026dd0b29.ap-southeast-2.aws.found.io:9200/").defaultCredentials("admin", "Hello#123").build());
+		factory.setHttpClientConfig(new HttpClientConfig.Builder(ES_URL).defaultCredentials(ES_USER, ES_PASS).build());
 	}
 
 	public static void main(String[] args) {
 		ElasticUpdateHandler elasticUpdateHandler = new ElasticUpdateHandler();
-//		System.out.println(elasticUpdateHandler.getHealth());
+		// System.out.println(elasticUpdateHandler.getHealth());
 		System.out.println(elasticUpdateHandler.getIndices());
-		
-		
+
 	}
-	
+
 	@Override
 	public void execute(BotAPI botAPI, Update update) {
 		L.debug(update.toString());
+
+		if (update.getMessage() == null || update.getMessage().getText() == null) {
+			return;
+		}
 
 		String messageText = update.getMessage().getText();
 
@@ -88,16 +100,26 @@ public class ElasticUpdateHandler implements BotUpdateHandler {
 	}
 
 	public String getIndices() {
-		String result = "unknown";
-		JestClient jestClient = factory.getObject();
+		String result = "";
 		try {
-			JestResult jestResult = jestClient.execute(new Get.Builder(null, null).build());
-			//JsonObject jsonObject = catResult.getJsonObject();
-			//result = jsonObject.get("status").getAsString();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			jestClient.shutdownClient();
+			GetRequest request = Unirest.get("http://5f658568e210b218e632034026dd0b29.ap-southeast-2.aws.found.io:9200/_stats?pretty=true").basicAuth(ES_USER, ES_PASS);
+			HttpResponse<JsonNode> response = request.asJson();
+			JSONObject indices = response.getBody().getObject().getJSONObject("indices");
+			@SuppressWarnings("unchecked")
+			Set<String> keys = indices.keySet();
+			for (String key : keys) {
+				if (key.startsWith(".kibana") || key.startsWith(".marvel")) {
+					continue;
+				}
+				Integer count = indices.getJSONObject(key).getJSONObject("total").getJSONObject("docs").getInt("count");
+				result = result + "index:" + key + " count: " + count + "\n";
+			}
+
+		} catch (Exception e) {
+			result = "unknown";
+		}
+		if (result.isEmpty()) {
+			result = "No Indices found.";
 		}
 
 		return result;

@@ -3,6 +3,7 @@
  */
 package com.smistrydev.poc.bot;
 
+import java.net.SocketTimeoutException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -81,7 +82,7 @@ public class BotListener extends Thread {
 						}
 					}
 				} catch (BotException e) {
-					L.error(e.getMessage(), e);
+					// L.error(e.getMessage(), e);
 				}
 
 			}
