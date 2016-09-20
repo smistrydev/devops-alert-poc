@@ -3,6 +3,7 @@
  */
 package com.smistrydev.poc.update;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,8 +20,11 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.request.GetRequest;
 
 import de.raysha.lib.telegram.bot.api.BotAPI;
+import de.raysha.lib.telegram.bot.api.BotAPI.ParseMode;
 import de.raysha.lib.telegram.bot.api.exception.BotException;
 import de.raysha.lib.telegram.bot.api.model.ChatId;
+import de.raysha.lib.telegram.bot.api.model.ReplyKeyboardHide;
+import de.raysha.lib.telegram.bot.api.model.ReplyKeyboardMarkup;
 import de.raysha.lib.telegram.bot.api.model.Update;
 import io.searchbox.client.JestClient;
 import io.searchbox.client.JestClientFactory;
@@ -63,6 +67,19 @@ public class ElasticUpdateHandler implements BotUpdateHandler {
 
 		String messageText = update.getMessage().getText();
 
+		L.debug(" ------ Message: " + messageText);
+
+		if (messageText.startsWith("/start")) {
+			ChatId chatId = new ChatId(update.getMessage().getChat().getId());
+			try {
+				ReplyKeyboardHide replyKeyboardHide = new ReplyKeyboardHide();
+				replyKeyboardHide.setHide_keyboard(true);
+				botAPI.sendMessage(chatId, "Welcome to Elastic Alert Bot", null, false, null, replyKeyboardHide);
+			} catch (BotException e) {
+				throw new RuntimeException(e);
+			}
+		}
+
 		if (messageText.startsWith("/health")) {
 			ChatId chatId = new ChatId(update.getMessage().getChat().getId());
 			try {
@@ -81,6 +98,54 @@ public class ElasticUpdateHandler implements BotUpdateHandler {
 			}
 		}
 
+		if (messageText.startsWith("/dashboard")) {
+
+			ChatId chatId = new ChatId(update.getMessage().getChat().getId());
+			try {
+				ParseMode parseMode = ParseMode.Markdown;
+				Boolean disableWebPagePreview = true;
+				Integer replyToMessageId = null;
+
+				ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+
+				List<String> dashboardListMarvel = new ArrayList<>();
+				dashboardListMarvel.add("Dashboard: Marvel");
+				List<String> dashboardListTwitter = new ArrayList<>();
+				dashboardListTwitter.add("Dashboard: Twitter");
+
+				List<List<String>> keyboard = new ArrayList<>();
+				keyboard.add(dashboardListMarvel);
+				keyboard.add(dashboardListTwitter);
+
+				replyKeyboardMarkup.setKeyboard(keyboard);
+				replyKeyboardMarkup.setOne_time_keyboard(true);
+				replyKeyboardMarkup.setResize_keyboard(true);
+				Object replyMarkup = replyKeyboardMarkup;
+				botAPI.sendMessage(chatId, "Please choose the dashboard", parseMode, disableWebPagePreview, replyToMessageId, replyMarkup);
+
+				// botAPI.sendDocument(chatId, new File("/Users/sanjaymistry/java/docs/Tweeter.png"));
+			} catch (BotException e) {
+				throw new RuntimeException(e);
+			}
+		}
+
+		if (messageText.startsWith("Dashboard:")) {
+
+			ChatId chatId = new ChatId(update.getMessage().getChat().getId());
+			try {
+				ReplyKeyboardHide replyKeyboardHide = new ReplyKeyboardHide();
+				replyKeyboardHide.setHide_keyboard(true);
+
+				if (messageText.endsWith("Marvel")) {
+					botAPI.sendDocument(chatId, new File("/Users/sanjaymistry/java/docs/Marvel.png"), null, replyKeyboardHide);
+				}
+				if (messageText.endsWith("Twitter")) {
+					botAPI.sendDocument(chatId, new File("/Users/sanjaymistry/java/docs/Tweeter.png"), null, replyKeyboardHide);
+				}
+			} catch (BotException e) {
+				throw new RuntimeException(e);
+			}
+		}
 	}
 
 	public String getHealth() {
