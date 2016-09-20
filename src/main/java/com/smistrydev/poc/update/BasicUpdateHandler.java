@@ -22,7 +22,6 @@ public class BasicUpdateHandler implements BotUpdateHandler {
 	@Override
 	public void execute(BotAPI botAPI, Update update) {
 		L.debug(update.toString());
-
 		ChatId chatId = new ChatId(update.getMessage().getChat().getId());
 		try {
 			botAPI.sendMessage(chatId, "Echo: " + update.getMessage().getText());
