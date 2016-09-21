@@ -142,6 +142,9 @@ public class ElasticUpdateHandler implements BotUpdateHandler {
 				if (messageText.endsWith("Twitter")) {
 					botAPI.sendDocument(chatId, new File("/Users/sanjaymistry/java/docs/Tweeter.png"), null, replyKeyboardHide);
 				}
+				if (messageText.endsWith("Graph")) {
+					botAPI.sendDocument(chatId, new File("/Users/sanjaymistry/java/docs/Graph.png"), null, replyKeyboardHide);
+				}
 			} catch (BotException e) {
 				throw new RuntimeException(e);
 			}
