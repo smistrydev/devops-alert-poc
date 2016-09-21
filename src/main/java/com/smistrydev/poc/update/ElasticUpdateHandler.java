@@ -112,10 +112,13 @@ public class ElasticUpdateHandler implements BotUpdateHandler {
 				dashboardListMarvel.add("Dashboard: Marvel");
 				List<String> dashboardListTwitter = new ArrayList<>();
 				dashboardListTwitter.add("Dashboard: Twitter");
+				List<String> dashboardListGraph = new ArrayList<>();
+				dashboardListGraph.add("Dashboard: Graph");
 
 				List<List<String>> keyboard = new ArrayList<>();
 				keyboard.add(dashboardListMarvel);
 				keyboard.add(dashboardListTwitter);
+				keyboard.add(dashboardListGraph);
 
 				replyKeyboardMarkup.setKeyboard(keyboard);
 				replyKeyboardMarkup.setOne_time_keyboard(true);
